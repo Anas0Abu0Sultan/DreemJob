@@ -1,0 +1,187 @@
+
+{% extends 'base.html' %}
+{% load static %}
+<!-- header-start -->
+{% block header %}{% include "includes/header.html" %}{% endblock %}
+<!-- header-end -->
+<!-- content-start -->
+{% block content %}
+    <!-- bradcam_area  -->  
+    <div class="bradcam_area bradcam_bg_1">
+        <div class="container h-50">
+            <div class="row ">
+                <div class="col-xl-12">
+                    <div class="bradcam_text">
+                        {% comment %} <a href="{% url 'offers' job.id %}">sss</a> {% endcomment %}
+                        <h3>{{job.title}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ bradcam_area  -->
+    <div class="job_details_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="job_details_header">
+                        <div class="single_jobs white-bg d-flex justify-content-between">
+                            <div class="jobs_left d-flex align-items-center">
+                                <div class="thumb">
+                                    <img src="{% static 'img/svg_icon/1.svg' %}" alt="">
+                                </div>
+                                <div class="jobs_conetent">
+                                    <h4>{{job.title}}</h4>
+                                    <div class="links_locat d-flex align-items-center">
+                                        <div class="location">
+                                            <p> <i class="fa fa-map-marker"></i>{{ job.location }}</p>
+                                        </div>
+                                        <div class="location">
+                                            <p> <i class="fa fa-clock-o"></i>{{ job.job_nature }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="descript_wrap white-bg">
+                        <div class="single_wrap">
+                            <h4>Job description</h4>
+                            <p>{{ job.description }}</p>
+                        </div>
+                    </div>
+                    <div class="apply_job_form white-bg">
+                        <h4>Apply for the {{ job.title }} job</h4>
+                    
+                        {% if already_applied %}
+                            <div class="alert alert-info">
+                                Your application was already submitted on {{ application_date }}.
+                            </div>
+                        {% else %}
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input_field">
+                                            <input type="text" placeholder="Your name" name="username" value="{{ form.username.value }}" required>
+                                            {% if form.username.errors %}
+                                                <ul class="error-list">
+                                                    {% for error in form.username.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-6">
+                                        <div class="input_field">
+                                            <input type="email" placeholder="Email" name="email" value="{{ form.email.value }}" required>
+                                            {% if form.email.errors %}
+                                                <ul class="error-list">
+                                                    {% for error in form.email.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-12">
+                                        <div class="input_field">
+                                            <input type="text" placeholder="Website/Portfolio link" name="link" value="{{ form.link.value }}" required>
+                                            {% if form.link.errors %}
+                                                <ul class="error-list">
+                                                    {% for error in form.link.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-12">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <button name="cv" type="button" id="inputGroupFileAddon03">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true" required></i>
+                                                </button>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" name="cv" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" required onchange="updateFileName()">
+                                                <label class="custom-file-label" for="inputGroupFile03">Choose CV file</label>
+                                            </div>
+                                        </div>
+                                        {% if form.cv.errors %}
+                                            <ul class="error-list">
+                                                {% for error in form.cv.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                    
+                                    <div class="col-md-12">
+                                        <div class="input_field">
+                                            <textarea name="coverletter" cols="30" rows="10" placeholder="Coverletter" required>{{ form.coverletter.value }}</textarea>
+                                            {% if form.coverletter.errors %}
+                                                <ul class="error-list">
+                                                    {% for error in form.coverletter.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-12">
+                                        <div class="submit_btn">
+                                            <button class="boxed-btn3 w-100" type="submit">Apply Now</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+
+
+                    
+                </div>
+                <div class="col-lg-4">
+                    <div class="job_sumary">
+                        <div class="summery_header">
+                            <h3>Job Summery</h3>
+                        </div>
+                        <div class="job_content">
+                            <ul>
+                                <li>Published on: <span>{{ job.created_at.date }}</span></li>
+                                {% comment %} <li>Vacancy: <span>2 Position</span></li> {% endcomment %}
+                                <li>Salary: <span>{{ job.salary }}$</span></li>
+                                <li>Location: <span>{{ job.location }}</span></li>
+                                <li>Job Nature: <span>{{ job.job_nature }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    function updateFileName() {
+        var input = document.getElementById('inputGroupFile03');
+        var label = document.querySelector('label[for="inputGroupFile03"]');
+        var fileName = input.files[0].name;  // Get the file name
+        label.textContent = fileName;  // Update the label text with the file name
+    }
+</script>
+{% endblock %}
+<!-- content-end -->
+<!-- footer-start -->
+{% block footer %}{% include "includes/footer.html" %}{% endblock  %}
+<!-- footer-end -->
